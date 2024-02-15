@@ -211,9 +211,21 @@ int main() {
         explore this parameter in more detail later on.
 
     */
-
    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
    glEnableVertexAttribArray(0);
+
+    // Creating a Vertex Array Object (VAO)
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+    // Binding the VAO
+    glBindVertexArray(VAO);
+    // Copy vertices array in a buffer for OpenGL to use
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    // Set vertex attribute pointers
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
 
     // Render Loop, to keep window open until it is told to close
     while(!glfwWindowShouldClose(window)) {
@@ -226,6 +238,21 @@ int main() {
         // Clear the frame at start of each iteration
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);   // Change color with these parameters
         glClear(GL_COLOR_BUFFER_BIT);
+
+        glUseProgram(shaderProgram);
+        glBindVertexArray(VAO);
+        // Draw the triangle
+
+        /* Expand for explanation of function parameters
+                glDrawArrays(x, y, z);
+
+                    x: The type of primitive to render.
+                    y: The starting index of the vertex array.
+                    z: The number of vertices to render.
+                
+        */
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
 
         // Process input
         processInput(window);
